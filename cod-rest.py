@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, Response, request
+from flask import Flask, Response, request, jsonify
 from managers.DbManager import DbManager
 from models.PlayerModel import Player
 
@@ -32,14 +32,26 @@ players = [
     }
 ]
 
+def fix(list):
+    new_list = []
+    for item in list:
+        new_list.append({
+            'firstname' : item[1],
+            'lastname' : item[2],
+            'twitter' : item[3],
+            'team' : item[4],
+            'elo' : item[5]
+        })
+    return new_list
+
 
 @app.route('/api/players', methods=['GET', 'POST'])
 def test():
     print(request.args.to_dict())
     if request.method == 'GET':
         session = DbManager().get_session()
-        result = session.execute('SELECT * FROM players;').fetchall()
-        resp = Response(json.dumps({'players': result}))
+        result = session.execute("SELECT * FROM players;").fetchall()
+        resp = Response(json.dumps({'players': fix(result)}))
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
     elif request.method == 'POST':
