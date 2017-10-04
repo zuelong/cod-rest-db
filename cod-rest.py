@@ -47,7 +47,6 @@ def fix(list):
 
 @app.route('/api/players', methods=['GET', 'POST'])
 def test():
-    print(request.args.to_dict())
     if request.method == 'GET':
         session = DbManager().get_session()
         result = session.execute("SELECT * FROM players;").fetchall()
@@ -55,10 +54,10 @@ def test():
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
     elif request.method == 'POST':
-        req = request.args.to_dict()
+        req = request.get_json()
         Player().add_player(req.get('firstname'), req.get('lastname'), req.get('twitter'), req.get('team'))
-        return 'thanks!'
+        return 'Added: ' + req
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
