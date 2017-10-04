@@ -41,7 +41,7 @@ def test():
         result = session.execute('SELECT * FROM players;').fetchall()
         resp = Response(str(result))
         resp.headers['Access-Control-Allow-Origin'] = '*'
-        return result
+        return resp
     elif request.method == 'POST':
         req = request.args.to_dict()
         Player().add_player(req.get('firstname'), req.get('lastname'), req.get('twitter'), req.get('team'))
