@@ -56,7 +56,7 @@ def test():
     elif request.method == 'POST':
         req = request.get_json()
         Player().add_player(req.get('firstname'), req.get('lastname'), req.get('twitter'), req.get('team'))
-        return 'Added: ' + req
+        return 'Added: ' + str(req)
 
 
 if __name__ == '__main__':
