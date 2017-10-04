@@ -39,7 +39,7 @@ def test():
     if request.method == 'GET':
         session = DbManager().get_session()
         result = session.execute('SELECT * FROM players;').fetchall()
-        resp = Response(str(result))
+        resp = Response(json.dumps({'players': result}))
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
     elif request.method == 'POST':
