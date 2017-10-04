@@ -37,11 +37,11 @@ players = [
 def test():
     print(request.args.to_dict())
     if request.method == 'GET':
-        resp = Response(json.dumps({'players': players}))
-        resp.headers['Access-Control-Allow-Origin'] = '*'
         session = DbManager().get_session()
         result = session.execute('SELECT * FROM players;').fetchall()
-        return str(result)
+        resp = Response(str(result))
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return result
     elif request.method == 'POST':
         req = request.args.to_dict()
         Player().add_player(req.get('firstname'), req.get('lastname'), req.get('twitter'), req.get('team'))
