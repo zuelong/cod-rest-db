@@ -25,6 +25,7 @@ def create_response(resp):
     resp = Response(json.dumps({'players': fix(resp)}))
     resp.headers['Access-Control-Allow-Origin'] = 'http://passifyer.com'
     resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    resp.headers['Access-Control-Allow-Methods'] = 'PUT, POST, GET, OPTIONS'
     resp.headers['Content-Type'] = 'application/json'
     return resp
 
