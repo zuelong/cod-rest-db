@@ -24,6 +24,7 @@ def fix(list):
 def create_response(resp):
     resp = Response(json.dumps({'players': fix(resp)}))
     resp.headers['Access-Control-Allow-Origin'] = 'http://passifyer.com'
+    resp.headers['Content-Type'] = 'application/json'
     return resp
 
 
