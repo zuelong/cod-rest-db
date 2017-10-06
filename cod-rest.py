@@ -23,7 +23,7 @@ def fix(list):
 
 def create_response(resp):
     resp = Response(json.dumps({'players': fix(resp)}))
-    resp.headers['Access-Control-Allow-Origin'] = 'passifyer.com'
+    resp.headers['Access-Control-Allow-Origin'] = 'http://passifyer.com'
     return resp
 
 
@@ -43,7 +43,7 @@ def test():
     elif request.method == 'OPTIONS':
         resp = Response()
         resp.headers['Allow'] = 'OPTIONS, GET, HEAD, POST'
-        resp.headers['Access-Control-Allow-Origin'] = 'passifyer.com'
+        resp.headers['Access-Control-Allow-Origin'] = 'http://passifyer.com'
         return resp
 
 
