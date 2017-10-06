@@ -42,6 +42,12 @@ def test():
         return create_response(result)
     elif request.method == 'PUT':
         Player.add_player(req)
+        resp = Response({'one': 'two'})
+        resp.headers['Access-Control-Allow-Origin'] = 'http://passifyer.com'
+        resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        resp.headers['Access-Control-Allow-Methods'] = 'PUT, POST, GET, OPTIONS'
+        resp.headers['Content-Type'] = 'application/json'
+        return resp
         return create_response(req)
     elif request.method == 'OPTIONS':
         resp = Response()
