@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from managers.DbManager import Base, DbManager
+from managers.DbManager import Base, db_session
 
 class Player(Base):
     __tablename__ = 'players'
@@ -11,8 +11,29 @@ class Player(Base):
     team = Column(String(250), nullable=True)
     elo = Column(Integer, nullable=False)
 
-    def add_player(self, firstname, lastname, twitter=None, team=None):
-            player = Player(firstname=firstname, lastname=lastname, twitter=twitter, team=team, elo=1200)
-            session = DbManager().get_session()
-            session.add(player)
-            session.commit()
+    @staticmethod
+    def add_player(data):
+            player = Player(firstname=data.get('firstname'), lastname=data.get('lastname'), twitter=data.get('twitter'),
+                            team=data.get('team'), elo=1200)
+            db_session.add(player)
+            db_session.commit()
+
+    @staticmethod
+    def get_player(id):
+        return Player.query.get(id)
+
+    @staticmethod
+    def get_players(data):
+        fn = data.get('firstname') or '%'
+        ln = data.get('lastname') or '%'
+        tw = data.get('twitter') or '%'
+        tm = data.get('team') or '%'
+        elo = data.get('elo') or '%'
+        result = Player.query\
+            .filter(Player.firstname.like(fn))\
+            .filter(Player.lastname.like(ln))\
+            .filter(Player.twitter.like(tw))\
+            .filter(Player.team.like(tm))\
+            .filter(Player.elo.like(elo))
+        print(result)
+        return result

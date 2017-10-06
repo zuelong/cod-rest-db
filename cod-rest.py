@@ -1,62 +1,54 @@
 import json
 
 from flask import Flask, Response, request, jsonify
-from managers.DbManager import DbManager
+from managers.DbManager import init_db
 from models.PlayerModel import Player
-
-DbManager.set_engine('sqlite:///db/player.db')
 
 app = Flask(__name__)
 
-players = [
-    {
-        'id': 1,
-        'firstName': 'Aaron',
-        'lastName': 'O\'Rourke',
-        'team': 'Numbah Juans',
-        'rating': 1000
-    },
-    {
-        'id': 2,
-        'firstName': 'Tyler',
-        'lastName': 'McGraw',
-        'team': 'Twotally Awesome',
-        'rating': 1000
-    },
-    {
-        'id': 3,
-        'firstName': 'Jordan',
-        'lastName': 'Hyland',
-        'team': 'Three-Fiddy',
-        'rating': 2600
-    }
-]
 
 def fix(list):
     new_list = []
     for item in list:
         new_list.append({
-            'firstname' : item[1],
-            'lastname' : item[2],
-            'twitter' : item[3],
-            'team' : item[4],
-            'elo' : item[5]
+            'id': item.id,
+            'firstname': item.firstname,
+            'lastname': item.lastname,
+            'twitter': item.twitter,
+            'team': item.team,
+            'elo': item.elo
         })
     return new_list
 
 
-@app.route('/api/players', methods=['GET', 'POST'])
+def create_response(resp):
+    resp = Response(json.dumps({'players': fix(resp)}))
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+
+@app.route('/api/players', methods=['GET', 'POST', 'PUT'])
 def test():
+    req = request.get_json()
     if request.method == 'GET':
-        session = DbManager().get_session()
-        result = session.execute("SELECT * FROM players;").fetchall()
-        resp = Response(json.dumps({'players': fix(result)}))
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        return resp
+        result = Player.query.all()
+        return create_response(result)
     elif request.method == 'POST':
-        req = request.get_json()
-        Player().add_player(req.get('firstname'), req.get('lastname'), req.get('twitter'), req.get('team'))
+        print(req)
+        result = Player.get_players(req)
+        return create_response(result)
+    elif request.method == 'PUT':
+        Player.add_player(req)
         return 'Added: ' + str(req)
+
+
+@app.route('/api/player/<id>', methods=['GET'])
+def player_id(id):
+    try:
+        result = create_response(Player.get_player(id))
+        return result
+    except TypeError:
+        return "Invalid ID Number"
 
 
 if __name__ == '__main__':
