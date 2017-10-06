@@ -46,6 +46,7 @@ def test():
     elif request.method == 'OPTIONS':
         resp = Response()
         resp.headers['Allow'] = 'OPTIONS, GET, HEAD, POST, PUT'
+        resp.headers['Access-Control-Allow-Methods'] = 'PUT, POST, GET, OPTIONS'
         resp.headers['Access-Control-Allow-Origin'] = 'http://passifyer.com'
         resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
         return resp
