@@ -27,7 +27,7 @@ def create_response(resp):
     return resp
 
 
-@app.route('/api/players', methods=['GET', 'POST', 'PUT'])
+@app.route('/api/players', methods=['GET', 'POST', 'PUT', 'OPTIONS'])
 def test():
     req = request.get_json()
     if request.method == 'GET':
@@ -40,6 +40,10 @@ def test():
     elif request.method == 'PUT':
         Player.add_player(req)
         return 'Added: ' + str(req)
+    elif request.method == 'OPTIONS':
+        resp = Response()
+        resp.headers['Allow'] = 'OPTIONS, GET, HEAD, POST'
+        return resp
 
 
 @app.route('/api/player/<id>', methods=['GET'])
