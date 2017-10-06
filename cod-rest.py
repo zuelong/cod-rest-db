@@ -42,7 +42,7 @@ def test():
         return create_response(result)
     elif request.method == 'PUT':
         Player.add_player(req)
-        return 'Added: ' + str(req)
+        return create_response(req)
     elif request.method == 'OPTIONS':
         resp = Response()
         resp.headers['Allow'] = 'OPTIONS, GET, HEAD, POST, PUT'
